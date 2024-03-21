@@ -49,6 +49,20 @@ return [
 
         ],
         
+        'administrateur' => [
+            'driver' => 'token', 
+            'provider' => 'administrateurs', 
+            'hash' => true,
+
+        ],
+        
+        'user' => [
+            'driver' => 'token', 
+            'provider' => 'users', 
+            'hash' => true,
+
+        ],
+        
     ],
 
     /*

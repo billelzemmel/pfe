@@ -1,0 +1,92 @@
+.table {
+    margin-top: 100px;
+    height: 300px;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card {
+    height: 550px;
+}
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 12px 8px 16px;
+    gap: 8px;
+    height: 40px;
+    width: 200px;
+    border: none;
+    background: #056bfa27;
+    border-radius: 20px;
+    cursor: pointer;
+    float: right;
+    margin-right: 15px;
+  }
+  
+  .lable {
+    margin-top: 1px;
+    font-size: 19px;
+    line-height: 22px;
+    color: #056DFA;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+  }
+  
+  .button:hover {
+    background: #056bfa49;
+  }
+  
+  .button:hover .svg-icon {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+  
+    25% {
+      transform: rotate(-8deg);
+    }
+  
+    50% {
+      transform: rotate(0deg);
+    }
+  
+    75% {
+      transform: rotate(8deg);
+    }
+  
+    100% {
+      transform: rotate(0deg);
+    }
+  }
+
+td {
+    text-align: center;
+    font-size: 15px;
+    padding-top: 12px;
+}
+tbody{
+    height: 12px;
+}
+
+.view:hover{
+    color: green;
+}
+.edit{
+    margin-left: 12px;
+}
+.edit:hover{
+    color: blue;
+}
+.clear{
+    margin-left: 12px;
+}
+.clear:hover{
+    color:red;
+}
+
+  

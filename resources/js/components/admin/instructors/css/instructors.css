@@ -7,6 +7,7 @@
     position: relative;
     box-shadow: #604b4a30 0px 70px 30px -50px;
     transition: all 0.5s ease-in-out;
+    margin: 15px;
 
   }
   
@@ -188,13 +189,13 @@
 
 
 
-  .modal{
+  .instructorModal{
     --bs-modal-width: 700px;
   }
 
   
 
-.modal-content {
+.instructorModal .modal-content {
     border-radius: 10px;
     overflow: hidden;
     animation: fadeIn 0.5s ease-in-out;
@@ -203,19 +204,19 @@
 
 }
 
-.modal-header {
+.instructorModal .modal-header {
     background-color: #3498db;
     color: #fff;
     padding: 15px;
     border-bottom: 1px solid #ddd;
 }
 
-.modal-header button.close {
+.instructorModal .modal-header button.close {
     color: #fff;
     font-size: 1.5rem;
 }
 
-.modal-body {
+.instructorModal .modal-body {
     display: flex;
     padding: 20px;
 }

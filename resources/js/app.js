@@ -9,6 +9,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 // Import Bootstrap Icons
 import 'bootstrap-icons/font/bootstrap-icons.css';
 
+
 // Import Boxicons
 import 'boxicons/css/boxicons.min.css';
 

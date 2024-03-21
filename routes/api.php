@@ -9,6 +9,7 @@ use App\Http\Controllers\TypesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\SadminController;
+use App\Http\Controllers\SeancesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehiculeController;
 
@@ -27,8 +28,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/autoecoles', [AutoecoleController::class,'all_auto_ecoles']);
+Route::get('/autoecoles/{id}', [AutoecoleController::class, 'find_ecole']);
+Route::get('/seances', [SeancesController::class,'all_seances']);
+Route::post('/seances', [SeancesController::class,'create_seance']);
+Route::delete('/seances/{id}', [SeancesController::class,'delete_seance']);
 Route::get('/administrateurs', [AdministrateurController::class,'all_administrateurs']);
 Route::get('/administrateurs/{autoecoleId}', [AdministrateurController::class, 'adminsByAutoEcole']);
+Route::get('/administrateurs/{id}', [AdministrateurController::class, 'find_admin']);
+
+Route::post('/administrateurs/login', [AdministrateurController::class, 'login']);
 Route::post('/sadmin/signup', [SadminController::class, 'signup']);
 Route::post('/sadmin/login', [SadminController::class, 'login']);
 Route::post('/autoecoles', [AutoecoleController::class, 'create_auto_ecole']);
@@ -37,14 +45,17 @@ Route::delete('/autoecoles/{id}', [AutoecoleController::class, 'delete_auto_ecol
 Route::post('/administrateurs', [AdministrateurController::class, 'create_administrateur']);
 Route::put('/administrateurs/{id}', [AdministrateurController::class, 'update_administrateur']);
 Route::delete('/administrateurs/{id}', [AdministrateurController::class, 'delete_administrateur']);
+Route::post('/users/login', [UserController::class, 'login']);
 Route::get('/users', [UserController::class, 'all_users']);
 Route::post('/users', [UserController::class, 'create_user']);
 Route::put('/users/{id}', [UserController::class, 'update_user']);
 Route::delete('/users/{id}', [UserController::class, 'delete_user']);
 Route::get('/moniteurs', [MoniteurController::class, 'all_moniteurs']);
 Route::get('/moniteurs/{id}', [MoniteurController::class, 'find_moniteur']);
+Route::get('/candidatsByMon/{id}', [CandidatsController::class, 'findCandidatByMoniteurId']);
 Route::get('/candidats', [CandidatsController::class, 'all_candidats']);
 Route::get('/condidats/{id}', [CandidatsController::class, 'find_condidat']);
+Route::put('/affectMoniteur/{id}', [CandidatsController::class, 'affectMoniteur']);
 Route::post('/types', [TypesController::class, 'create_type']);
 Route::get('/exams', [ExamController::class, 'all_exams']);
 Route::get('/exams/{id}', [ExamController::class, 'find_exam']);
@@ -56,5 +67,8 @@ Route::get('/vehicules/{id}', [VehiculeController::class, 'find_vehicule']);
 Route::post('/vehicules', [VehiculeController::class, 'create_vehicule']);
 Route::put('/vehicules/{id}', [VehiculeController::class, 'update_vehicule']);
 Route::delete('/vehicules/{id}', [VehiculeController::class, 'delete_vehicule']);
+Route::get('/types', [TypesController::class, 'all_types']);
+Route::get('/examsbyMon/{id}', [ExamController::class, 'findVExamsByMoniteurId']);
+Route::get('/seancesBymon/{id}', [SeancesController::class, 'seancesBymon']);
 
 Route::get('/vehiculesbymoni/{id}', [VehiculeController::class, 'findVehiclesByMoniteurId']);

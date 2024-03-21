@@ -23,6 +23,8 @@
               <p class="brand-name-WuU">Auto ecole</p>
             </div>
             <div class="text-large-text-button--L1L">Home</div>
+            <div class="text-large-text-button--ZPt">Futures</div>
+
             <div class="text-large-text-button--ZPt">About</div>
             <div class="text-large-text-button--dee">Contact</div>
             <div class="text-large-text-button--WyL">Blog</div>
@@ -32,6 +34,7 @@
 
             
           </div>
+          <!--HOME SECTION-->
           <div class="auto-group-uasz-rQv">
             <div class="epilogue-inter-N8N">
               <p class="welcome-to-our-driving-school-USJ">
@@ -66,6 +69,8 @@
             <img class="frame-1845-QMC" src="../../images/frame-1845.png"/>
           </div>
         </div>
+                  <!--FUTURES SECTIONS-->
+
         <div class="featurs-v4e">
           <div class="filled-tonal-small-filled-tonal-button--SYn">FUTURE FOR YOU</div>
           <p class="key-features-fwL">Key Features</p>
@@ -111,6 +116,8 @@
           <div class="frame-1846-EEz">
           </div>
         </div>
+                  <!--ABOUT SECTION-->
+
         <div class="call-to-action-MaW">
           <div class="auto-group-mcbx-TtS">
             <div class="shape-pills-bUr">
@@ -177,6 +184,8 @@
             </div>
           </div>
         </div>
+                  <!--CONTACT SECTION-->
+
         <div class="frame-1847-kv2">
           <div class="frame-1848-tWS">
             <div class="auto-group-hx1g-cxE">
@@ -198,6 +207,8 @@
             </div>
           </div>
         </div>
+                  <!--BLOG SECTION-->
+
         <div class="footer-1-UKY">
           <div class="div-Qyt">
             <div class="container-9ga">
@@ -254,7 +265,7 @@
         export default {
           data() {
             return {
-              mode: 'dark'
+              mode: ''
             };
           },
           methods: {
@@ -271,5 +282,5 @@
       
       
       </style>
-        <style   src="../../css/Home.css" id="home"></style>
+        <style scoped  src="../../css/Home.css" id="home"></style>
     

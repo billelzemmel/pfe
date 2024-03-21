@@ -35,8 +35,8 @@ class VehiculeController extends Controller
         $request->validate([
             'matricule' => 'required|unique:vehicules',
             'nom' => 'required',
-            'moniteur_id' => 'required',
-            'disponible' => 'required|boolean',
+            'moniteur_id' => '',
+            'disponible' => 'boolean',
             'type' => 'required|in:track,car,motor',
             'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048'
             ]);

@@ -13,13 +13,37 @@ use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
-    public function all_users()
+     public function all_users()
     {
         $users = User::orderBy('id', 'DESC')->get();
         return response()->json([
             'users' => $users
         ], 200);
-    }
+    } 
+   /*  public function all_users()
+{
+    $users = User::orderBy('id', 'DESC')->get();
+
+    $formattedUsers = $users->map(function ($user) {
+        return [
+            'ServerId'  => $user->id,
+            'FirstName' => $user->prenom, 
+            'LastName'  => $user->nom,    
+            'Email'     => $user->email,
+            'login'     => $user->login,            
+            'image'     => $user->image_url,            
+        ];
+    });
+
+    $jsonResponse = json_encode($formattedUsers, JSON_PRETTY_PRINT);
+
+    $filePath = storage_path('app/users_response.txt');
+
+    file_put_contents($filePath, $jsonResponse);
+
+    return response()->json($formattedUsers, 200);
+} */
+
 
     public function create_user(Request $request)
     {
@@ -31,17 +55,18 @@ class UserController extends Controller
                 'password' => 'required',
                 'email' => 'required|email',
                 'type' => 'required|in:moniteur,condidat',
-                'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048', // Adjust image validation rules as needed
+                'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048', 
             ]);
     
             $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
-    
+            $request['token'] = $this->generateToken();
+
             $user = User::create(array_merge(
                 $request->except('image'),
                 ['image_url' => $uploadedFileUrl]
             ));
     
-    
+
             if ($request->input('type') === 'moniteur') {
                 Moniteur::create([
                     'role' => 'moniteur',
@@ -70,6 +95,11 @@ class UserController extends Controller
             ], 500);
         }
         
+    }
+
+    private function generateToken()
+    {
+        return bin2hex(random_bytes(32));
     }
     public function update_user(Request $request, $id)
     {
@@ -130,4 +160,35 @@ class UserController extends Controller
 
         return response()->json(['message' => 'User deleted successfully.'], 200);
     }
+
+    public function login(Request $request)
+    {
+        $data = $request->validate([
+            'email' => 'required',
+            'password' => 'required|min:8',
+        ]);
+    
+        $user = User::where('email', $data['email'])->first();
+    
+        $relatedModel = Moniteur::class;
+        $ids = null;
+        if ($relatedModel::where('user_id', $user->id)->exists()) {
+            $ids = $relatedModel::where('user_id', $user->id)->first()->id;
+        } else {
+            $relatedModel = Candidats::class;
+            if ($relatedModel::where('user_id', $user->id)->exists()) {
+                $ids = $relatedModel::where('user_id', $user->id)->first()->id;
+            }
+        }
+    
+        if (!$user || !password_verify($data['password'], $user->password)) {
+            return response()->json(['error' => 'Invalid login credentials'], 401);
+        }
+    
+        $user->update(['token' => $this->generateToken()]);
+    
+        return response()->json(['message' => 'User logged in successfully', 'user' => $user, 'token' => $user->token, 'typeid' => $ids]);
+    }
+    
+
 }

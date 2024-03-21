@@ -486,3 +486,14 @@ $displacement:  3px;
 
     }
 }
+
+#theme-toggle {
+  font-size: 24px; /* Change the size according to your preference */
+  color: var(--light-button); /* Change the color to blue */
+  margin-right: 10px; /* Adjust the right margin to move it more to the left */
+  cursor: pointer;
+}
+.dark  #theme-toggle {
+  color: var(--dark-button); 
+  
+}

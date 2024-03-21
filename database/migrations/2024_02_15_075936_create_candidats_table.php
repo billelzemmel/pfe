@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('role')->default('condidat');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-
+            $table->unsignedBigInteger('moniteur_id')->nullable();
+            $table->foreign('moniteur_id')->references('id')->on('moniteurs')->onDelete('set null');
             $table->timestamps();
         });
     }

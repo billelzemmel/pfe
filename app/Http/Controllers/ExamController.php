@@ -35,7 +35,7 @@ class ExamController extends Controller
             'reference' => 'required',
             'date' => 'required',
             'condidat_id' => 'required',
-            'moniteur_id' => 'required',
+            'moniteur_id' => '',
             'type_id' => 'required',
         ]);
 
@@ -82,5 +82,17 @@ class ExamController extends Controller
         $exam->delete();
 
         return response()->json(['message' => 'Exam deleted successfully.'], 200);
+    }
+    public function findVExamsByMoniteurId($moniteurId)
+    {
+        $exams = Exam::where('moniteur_id', $moniteurId)
+            ->with(['condidiat.user', 'moniteur.user', 'types'])
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return response()->json([
+
+            'exams' => $exams
+        ], 200);
     }
 }

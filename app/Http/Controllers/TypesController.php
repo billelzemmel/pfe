@@ -21,5 +21,11 @@ class TypesController extends Controller
             'message' => 'Type created successfully.',
         ], 201);
     }
+    public function all_types(){
+        $types = Types::orderBy('id', 'DESC')->get();
+        return response()->json([
+            'types' => $types
+        ], 200);
+    }
 
 }

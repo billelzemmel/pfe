@@ -11,11 +11,14 @@ class CandidatsController extends Controller
     
     public function all_candidats()
     {
-        $candidats = Candidats::with('user')->orderBy('id', 'DESC')->get();
+        $candidats = Candidats::with(['user', 'moniteur.user'])->orderBy('id', 'DESC')->get();
+        
         return response()->json([
             'candidats' => $candidats
         ], 200);
     }
+    
+    
     public function find_condidat($id)
 {
     $condidat = Candidats::with('user')->find($id);
@@ -28,4 +31,32 @@ class CandidatsController extends Controller
         'condidat' => $condidat
     ], 200);
 }
+public function affectMoniteur(Request $request, $id)
+{
+    $request->validate([
+        'moniteur_id' => 'required|exists:moniteurs,id',
+    ]);
+
+    $candidat = Candidats::find($id);
+
+    if (!$candidat) {
+        return response()->json(['message' => 'Candidate not found.'], 404);
+    }
+
+    $candidat->moniteur_id = $request->input('moniteur_id');
+    $candidat->save();
+
+    return response()->json(['message' => 'Moniteur assigned successfully.'], 200);
+}
+public function findCandidatByMoniteurId($moniteur_id)
+    {
+        $candidats = Candidats::where('moniteur_id', $moniteur_id)
+                        ->with(['user', 'moniteur.user'])
+                        ->orderBy('id', 'DESC')
+                        ->get();
+        
+        return response()->json([
+            'candidats' => $candidats
+        ], 200);
+    }
 }

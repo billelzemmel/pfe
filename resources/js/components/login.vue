@@ -63,7 +63,7 @@ import axios from 'axios';
 export default {
   data() {
   return {
-    mode: 'dark',
+    mode: '',
     email: '',
     password: '',
   };
@@ -75,10 +75,11 @@ export default {
    
     async login() {
   try {
-    const response = await axios.post('/api/sadmin/login', {
+    const response = await axios.post('/api/administrateurs/login', {
     email: this.email,
     password: this.password,
 });
+  
 console.log(response , 'response')
 
 
@@ -86,11 +87,28 @@ console.log(response , 'response')
     const token = response.data.token;
 
     localStorage.setItem('token', token);
+    localStorage.setItem('AdminId',response.data.admin.id);
+    this.$router.push({ path: '/dashboard/home' });
+  } catch (error) {
+    try {
+    const response = await axios.post('/api/users/login', {
+    email: this.email,
+    password: this.password,
+});
+  
+console.log(response , 'response')
 
-    this.$router.push({ path: '/home' });
+
+  console.log(response.data);
+    const token = response.data.token;
+
+    localStorage.setItem('token', token);
+    localStorage.setItem('userId',response.data.typeid);
+    this.$router.push({ path: '/moniteur/home' });
   } catch (error) {
     alert("error password or email");
     console.error('Login failed', error);
+  }
   }
 }
 
@@ -100,5 +118,12 @@ console.log(response , 'response')
 };
 </script>
 
-<style src="../../css/login.scss" id="home"></style>
+<style scoped src="../../css/login.scss" id="home"></style>
 
+<style>
+html  {
+font-size: 62.5%;
+}
+  
+  
+  </style>

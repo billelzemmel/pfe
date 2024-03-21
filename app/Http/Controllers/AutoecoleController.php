@@ -65,4 +65,16 @@ class AutoecoleController extends Controller
 
         return response()->json(['message' => 'Autoecole deleted successfully.'], 200);
     }
+    public function find_ecole($id)
+    {
+        $autoecole = autoecole::find($id); 
+    
+        if (!$autoecole) {
+            return response()->json(['message' => 'Admin not found.'], 404);
+        }
+    
+        return response()->json([
+            'autoecole' => $autoecole
+        ], 200);
+    }
 }

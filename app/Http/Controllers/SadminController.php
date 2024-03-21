@@ -54,7 +54,7 @@ class SadminController extends Controller
 
     $sadmin->update(['token' => $this->generateToken()]);
 
-    return response()->json(['message' => 'Sadmin logged in successfully', 'token' => $sadmin->token]);
+    return response()->json(['message' => 'Sadmin logged in successfully', 'sadmin'=> $sadmin ,'token' => $sadmin->token]);
 }
 
 }
