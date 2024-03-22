@@ -222,7 +222,7 @@
 
 
 
-  <div class="modal fade" id="myModal">
+  <div class="modal fade" id="myModal12">
       <div class="modal-dialog modal-lg">
     
         <!-- Modal content-->
@@ -245,6 +245,7 @@
                           type="radio"
                           :value="moniteur.id"
                           v-model="selectedMoniteurId"
+                          name="moniteurId"
                         />
                     <span class="checkmark"></span>
               </label>
@@ -252,15 +253,16 @@
               <a href="#" class="card-link">{{moniteur.user.nom}}</a>
               </div>
             </div>
+
             </div>
           </div>
         </div>
         </div>
+        <button type="submit" class="btn btn-primary btns" @click="assignMoniteur">Continue</button>
+
       </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="assignMoniteur">Continue</button>
-        </div>
+        
       </div>
 
     </div>
@@ -277,6 +279,11 @@
 .card-container {
  display: flex;
  flex-wrap: wrap;
+}
+.btns{
+  float: right;
+  margin-right: 20px;
+  margin-bottom: 20px;
 }
 </style>
  <script src="./services/students.js"></script>

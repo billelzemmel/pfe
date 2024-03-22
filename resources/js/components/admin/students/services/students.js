@@ -49,8 +49,8 @@ export default {
     title: "Do you want to delete the Instructor?",
     showDenyButton: true,
     showCancelButton: true,
-    confirmButtonText: "Save",
-    denyButtonText: `Don't save`
+    confirmButtonText: "Delete",
+    denyButtonText: `Don't Delete`
   }).then(async (result) => {
     /* Read more about isConfirmed, isDenied below */
     if (result.isConfirmed) {
@@ -59,6 +59,8 @@ export default {
         await axios.delete(`/api/users/${candidatsId}`);
         this.Candidats = this.Candidats.filter(candidat => candidat.id !== candidatsId);
         console.log(`Moniteur with ID ${candidatsId} deleted successfully.`);
+        location.reload();
+
       } catch (error) {
         console.error(`Error deleting moniteur with ID ${candidatsId}:`, error);
       }
@@ -77,30 +79,34 @@ export default {
 
 openMoniteurModals(Candidat) {
   this.selectedCandidat = Candidat;
-  $('#myModal').modal('show');
+  $('#myModal12').modal('show');
   console.log(this.selectedCandidat); 
   console.log("selectedperson", this.selectedCandidat);
 },
-
 assignMoniteur() {
-  console.log('selcrted mointeur',this.selectedMoniteurId);
-  console.log("selectedpersoaan",this.selectedCandidat);
+  console.log('btn clicked')
+  console.log(this.selectedMoniteurId);
+  console.log("selectedcondidat", this.selectedCandidat);
 
   if (this.selectedMoniteurId) {
-    this.$axios
-      .put(`/api/affectMoniteur/${ this.selectedCandidat}`, {
+        const response = axios.put(`/api/affectMoniteur/${this.selectedCandidat}`, {
         moniteur_id: this.selectedMoniteurId,
       })
       .then((response) => {
         console.log(response.data.message); 
-        $('#myModal').modal('hide');
+        $('#myModal12').modal('hide');
+        location.reload();
+
       })
       .catch((error) => {
         console.error(error.response.data);
       });
   } else {
-    console.error('Please select a moniteur');
-  }
+    Swal.fire({
+      title: "Error!",
+      text: "Select an instructor!",
+      icon: "error"
+    });  }
 },
   },
 };
