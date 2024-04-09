@@ -125,8 +125,9 @@ console.log(response , 'response')
 };
 </script>
 
-<style scoped src="../../css/login.scss" id="home"></style>
-
+<style scoped>
+@import url('/public/css/login.scss');
+</style>
 <style>
 html  {
 font-size: 62.5%;

@@ -1,0 +1,2 @@
+data:
+	docker exec auto_ecolev2 bash -c "php artisan migrate"

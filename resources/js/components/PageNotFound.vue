@@ -25,4 +25,6 @@
 	</div>
 </section>
 </template>
-<style scoped src="../../css/pageNF.css"></style>
+<style scoped>
+@import url('/public/css/pageNF.css');
+</style>

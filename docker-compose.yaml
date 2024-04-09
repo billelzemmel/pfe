@@ -2,18 +2,18 @@ version: '3'
 
 services:
   web:
-    image: test-laravel:latest 
+    image: frontendv2:latest 
     ports:
       - "8080:80"
     volumes:
       - .:/var/www/html
-    # environment:
-    #   - APP_ENV=local
-    #   - APP_KEY=base64:7W53RBVKxU7ql0yBaGhaybldtRiWWpNOmAJWLX1Ulbk=  
-    #   - APP_DEBUG=true
-    #   - APP_URL=http://localhost
-    # depends_on:
-    #   - mysql
+    environment:
+       - APP_ENV=local
+       - APP_KEY=base64:7W53RBVKxU7ql0yBaGhaybldtRiWWpNOmAJWLX1Ulbk=  
+       - APP_DEBUG=true
+       - APP_URL=http://localhost
+    depends_on:
+       - mysql
 
   mysql:
     image: mysql:5.7
@@ -24,7 +24,8 @@ services:
       - MYSQL_DATABASE=auto_ecole
     volumes:
       - db_data:/var/lib/mysql
-  
+    container_name: auto_ecole
+
   # nginx:
   #   image: nginx:latest
   #   ports:

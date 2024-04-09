@@ -282,5 +282,7 @@
       
       
       </style>
-        <style scoped  src="../../css/Home.css" id="home"></style>
-    
+<style scoped>
+@import url('/public/css/Home.css');
+</style>
+  
