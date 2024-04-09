@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <Navbar />
-
     <router-view />
   </div>
 </template>
@@ -14,6 +13,16 @@ export default {
   components: {
     Navbar,
   },
+  created() {
+    this.checkConID();
+  },
+  methods: {
+    checkConID() {
+      const MonId = localStorage.getItem('MonID');
+      if (!MonId) {
+        this.$router.push('/home');
+      }
+    },
+  },
 };
 </script>
-

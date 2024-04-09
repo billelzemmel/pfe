@@ -50,6 +50,8 @@ Route::get('/users', [UserController::class, 'all_users']);
 Route::post('/users', [UserController::class, 'create_user']);
 Route::put('/users/{id}', [UserController::class, 'update_user']);
 Route::delete('/users/{id}', [UserController::class, 'delete_user']);
+Route::get('/users/{id}', [UserController::class, 'get_user']);
+
 Route::get('/moniteurs', [MoniteurController::class, 'all_moniteurs']);
 Route::get('/moniteurs/{id}', [MoniteurController::class, 'find_moniteur']);
 Route::get('/candidatsByMon/{id}', [CandidatsController::class, 'findCandidatByMoniteurId']);
@@ -69,6 +71,9 @@ Route::put('/vehicules/{id}', [VehiculeController::class, 'update_vehicule']);
 Route::delete('/vehicules/{id}', [VehiculeController::class, 'delete_vehicule']);
 Route::get('/types', [TypesController::class, 'all_types']);
 Route::get('/examsbyMon/{id}', [ExamController::class, 'findVExamsByMoniteurId']);
+Route::get('/examsbyCon/{id}', [ExamController::class, 'findVExamscandidatId']);
+
 Route::get('/seancesBymon/{id}', [SeancesController::class, 'seancesBymon']);
+Route::get('/seancesBycon/{id}', [SeancesController::class, 'seancesBycon']);
 
 Route::get('/vehiculesbymoni/{id}', [VehiculeController::class, 'findVehiclesByMoniteurId']);

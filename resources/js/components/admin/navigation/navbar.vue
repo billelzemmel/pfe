@@ -33,7 +33,7 @@
       <ul class="d-flex align-items-center">
 
      
-        <button data-mdb-ripple-init type="button" class="btn btn-primary me-3">
+        <button data-mdb-ripple-init type="button" class="btn btn-primary me-3" @click="logout">
          LOG OUT
         </button>
        
@@ -155,6 +155,11 @@ export default {
       } else {
         sidebar.classList.remove('collapse');
       }
+    },
+    
+    logout() {
+      localStorage.clear();
+      this.$router.push('/login');
     },
   },
 };

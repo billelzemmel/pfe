@@ -172,12 +172,16 @@ class UserController extends Controller
     
         $relatedModel = Moniteur::class;
         $ids = null;
+        $role="";
         if ($relatedModel::where('user_id', $user->id)->exists()) {
             $ids = $relatedModel::where('user_id', $user->id)->first()->id;
+            $role="moniteur";
         } else {
             $relatedModel = Candidats::class;
             if ($relatedModel::where('user_id', $user->id)->exists()) {
                 $ids = $relatedModel::where('user_id', $user->id)->first()->id;
+                $role="candidat";
+
             }
         }
     
@@ -187,8 +191,39 @@ class UserController extends Controller
     
         $user->update(['token' => $this->generateToken()]);
     
-        return response()->json(['message' => 'User logged in successfully', 'user' => $user, 'token' => $user->token, 'typeid' => $ids]);
+        return response()->json(['message' => 'User logged in successfully', 'user' => $user, 'token' => $user->token, 'typeid' => $ids ,'role'=>$role]);
     }
+    public function get_user($id)
+{
+    $user = User::find($id);
+
+    if (!$user) {
+        return response()->json(['error' => 'User not found.'], 404);
+    }
+
+    $relatedModel = Moniteur::class;
+    if ($relatedModel::where('user_id', $user->id)->exists()) {
+        $role = 'moniteur';
+    } else {
+        $relatedModel = Candidats::class;
+        if ($relatedModel::where('user_id', $user->id)->exists()) {
+            $role = 'candidat';
+        }
+    }
+
+    return response()->json([
+        'user' => [
+            'id' => $user->id,
+            'nom' => $user->nom,
+            'prenom' => $user->prenom,
+            'login' => $user->login,
+            'email' => $user->email,
+            'type' => $role ?? null,
+            'image_url' => $user->image_url,
+        ]
+    ], 200);
+}
+
     
 
 }

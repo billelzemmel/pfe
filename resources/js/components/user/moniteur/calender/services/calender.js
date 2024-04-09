@@ -31,7 +31,7 @@ export default {
         selectHelper: true,
         eventRender: function(event, element) {
           console.log(event);
-          element.find('.fc-title').append('<br/><b>Moniteur ID:</b> ' + event.moniteur_id);
+          element.find('.fc-title').append('<br/><b>Condidiat nom:</b> ' + event.candidat_name + ' ' + event.candidat_prenom);
         },
         select: async (start, end, allDay) => {
           $('#seancemodal').modal('toggle');
@@ -110,7 +110,7 @@ export default {
   methods: {
     async fetchEvents() {
       try {
-        this.userId = localStorage.getItem('userId');
+        this.userId = localStorage.getItem('MonID');
 
         const response = await axios.get(`/api/seancesBymon/${this.userId}`);
         this.evenements = response.data.seances;

@@ -33,7 +33,7 @@
       <ul class="d-flex align-items-center">
 
      
-        <button data-mdb-ripple-init type="button" class="btn btn-primary me-3"  @click="logout">
+        <button data-mdb-ripple-init type="button" class="btn btn-primary me-3" @click="logout">
          LOG OUT
         </button>
        
@@ -48,30 +48,25 @@
     <ul class="sidebar-nav" id="sidebar-nav">
 
       <li class="nav-item ">
-        <router-link class="nav-link " to="/moniteur/home"  :class="{ 'collapsed': $route.path !== '/moniteur/home'  }">
+        <router-link class="nav-link " to="/client/exams"  :class="{ 'collapsed': $route.path !== '/client/exams'  }">
           <i class="bi bi-grid"></i>
-          <span>Dashboard</span>
+          <span>Exams</span>
         </router-link>
       </li><!-- End Dashboard Nav -->
 
      
     
       <li class="nav-item ">
-        <router-link class="nav-link " to="/moniteur/exams"  :class="{ 'collapsed': $route.path !== '/moniteur/exams'  }">
+        <router-link class="nav-link " to="/client/callender"  :class="{ 'collapsed': $route.path !== '/client/callender'  }">
           <i class='bx bx-credit-card-front'></i>
-          <span>Exams</span>
-        </router-link>
-      </li><!-- End Dashboard Nav -->
-         
-      <li class="nav-item ">
-        <router-link class="nav-link " to="/moniteur/callender"  :class="{ 'collapsed': $route.path !== '/moniteur/callender'  }">
-          <i class="bi bi-calendar-date"></i>
           <span>Calendar</span>
         </router-link>
       </li><!-- End Dashboard Nav -->
+         
+   
 
       <li class="nav-item">
-        <router-link to="/moniteur/settings" class="nav-link " :class="{ 'collapsed': $route.path !== '/moniteur/settings'  }">
+        <router-link to="/client/settings" class="nav-link " :class="{ 'collapsed': $route.path !== '/clinet/settings'  }">
           <i class="bi bi-gear"></i>
           <span>Settings</span>
         </router-link>
@@ -100,9 +95,10 @@ export default {
         sidebar.classList.remove('collapse');
       }
     },
+    
     logout() {
       localStorage.clear();
-      this.$router.push('/login');
+      this.$router.push('/home');
     },
   },
 };

@@ -1,7 +1,6 @@
 <template>
   <div id="app">
     <Navbar />
-
     <router-view />
   </div>
 </template>
@@ -13,20 +12,17 @@ export default {
   name: 'App',
   components: {
     Navbar,
-  }
-  ,
+  },
   created() {
     this.checkConID();
   },
   methods: {
     checkConID() {
-      const AdminId = localStorage.getItem('AdminId');
-      if (!AdminId) {
+      const conID = localStorage.getItem('ConID');
+      if (!conID) {
         this.$router.push('/home');
       }
     },
   },
 };
-
 </script>
-

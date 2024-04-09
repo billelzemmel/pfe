@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from '../components/Home.vue';
 import Login from '../components/login.vue';
+import NotFound from '../components/PageNotFound.vue';
+
 import DashboardADM from '../components/admin/dashboard.vue';
 import vehicleComp from '../components/admin/vechule/vehicle.vue';
 import AddvehicleComp from '../components/admin/vechule/addvehicle.vue';
@@ -18,6 +20,10 @@ import callenderComp from'../components/admin/calender/calender.vue';
 import SettingCompa from'../components/user/moniteur/adminsetting/setting.vue';
 import ChatComp from '../components/user/chat.vue';
 import CallendersComp from'../components/user/moniteur/calender/calender.vue';
+import clientCallendersComp from'../components/user/candidat/calender/calender.vue';
+import clientSettingCompa from'../components/user/candidat/candidatsetting/setting.vue';
+import clientExamaComp from'../components/user/candidat/exams/exams.vue';
+import clientDash from '../components/user/candidat/dashboard.vue';
 
 const routes = [
   {
@@ -49,6 +55,26 @@ const routes = [
       {
         path: 'callender',
         component: CallendersComp,
+      }
+    ]
+  },
+  
+  {
+    path: '/client',
+    component: clientDash,
+    meta: { isAdmin: true },
+    children: [
+      {
+        path: 'exams',
+        component: clientExamaComp,
+      },
+      {
+        path: 'settings',
+        component: clientSettingCompa,
+      },
+      {
+        path: 'callender',
+        component: clientCallendersComp,
       }
     ]
   },
@@ -104,7 +130,10 @@ const routes = [
     path: '/home/chat',
     component: ChatComp,
   },
-
+  {
+    path: '/:catchAll(.*)',
+    component: NotFound,
+  }
   
 ];
 

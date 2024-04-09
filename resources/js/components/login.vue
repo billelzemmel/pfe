@@ -103,8 +103,15 @@ console.log(response , 'response')
     const token = response.data.token;
 
     localStorage.setItem('token', token);
-    localStorage.setItem('userId',response.data.typeid);
+    if (response.data.role=="candidat") {
+      localStorage.setItem('ConID',response.data.typeid);
+    this.$router.push({ path: '/client/exams' });
+    }
+    else{
+      localStorage.setItem('MonID',response.data.typeid);
     this.$router.push({ path: '/moniteur/home' });
+    }
+    
   } catch (error) {
     alert("error password or email");
     console.error('Login failed', error);

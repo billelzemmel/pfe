@@ -1,0 +1,21 @@
+/* Change the color of the prev/next/today buttons */
+.fc-prev-button, .fc-next-button, .fc-today-button {
+    background-color: #007bff; /* Change to your desired color */
+    color: #ffffff; /* Text color */
+}
+
+/* Change the color of the month/week/day buttons */
+.fc-month-button, .fc-agendaWeek-button, .fc-agendaDay-button {
+    background-color: #28a745; /* Change to your desired color */
+    color: #ffffff; /* Text color */
+}
+
+/* Change the color of the button hover states */
+.fc-button:hover {
+    background-color: #17a2b8; /* Change to your desired color */
+}
+
+/* Change the color of the button when it's active/pressed */
+.fc-button:active {
+    background-color: #007bff; /* Change to your desired color */
+}

@@ -95,4 +95,17 @@ class ExamController extends Controller
             'exams' => $exams
         ], 200);
     }
+    
+    public function findVExamscandidatId($candidatId)
+    {
+        $exams = Exam::where('condidat_id', $candidatId)
+            ->with(['condidiat.user', 'moniteur.user', 'types'])
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return response()->json([
+
+            'exams' => $exams
+        ], 200);
+    }
 }

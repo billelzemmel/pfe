@@ -21,7 +21,8 @@ class SeancesController extends Controller
             'moniteur_id'=>$seance->moniteur_id ,
             'moniteur_name'=>$seance->moniteur->user->nom,
             'candidat'=>$seance->condidat_id ,      
-            'candidat_name'=>$seance->condidiat->user->nom
+            'candidat_name'=>$seance->condidiat->user->nom,
+            'moniteur_prenom'=>$seance->moniteur->user->prenom,
 
             ];
         }
@@ -46,8 +47,10 @@ class SeancesController extends Controller
                 'moniteur_id'=>$seance->moniteur_id ,
                 'moniteur_name'=>$seance->moniteur->user->nom,
                 'candidat'=>$seance->condidat_id ,      
-                'candidat_name'=>$seance->condidiat->user->nom
-                
+                'candidat_name'=>$seance->condidiat->user->nom,
+                'moniteur_prenom'=>$seance->moniteur->user->prenom,
+                'candidat_prenom'=>$seance->condidiat->user->prenom,
+
             ];
         }
         return response()->json([
@@ -86,7 +89,32 @@ class SeancesController extends Controller
     }
 
 
+    public function seancesBycon($condidatId)
+    {
+        $events=array();
+        $seances = Seances::where('condidat_id', $condidatId)
+        ->with(['condidiat', 'condidiat.user'])
+        ->orderBy('id', 'DESC')
+        ->get();
 
+        foreach($seances as $seance){
+            $events[]=[
+                'seance_id' => $seance->id , 
+                'title' => $seance->title , 
+                'start' => $seance->start_date , 
+                'end_date' => $seance->end_date , 
+                'moniteur_id'=>$seance->moniteur_id ,
+                'moniteur_name'=>$seance->moniteur->user->nom,
+                'candidat'=>$seance->condidat_id ,      
+                'candidat_name'=>$seance->condidiat->user->nom,
+                'moniteur_prenom'=>$seance->moniteur->user->prenom,
+
+            ];
+        }
+        return response()->json([
+            'seances' => $events
+        ], 200);
+    }
     }
 
 
