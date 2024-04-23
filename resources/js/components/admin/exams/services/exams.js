@@ -1,6 +1,7 @@
 
 import axios from 'axios';
 import Swal from 'sweetalert2'
+import { Bootstrap4Pagination } from 'laravel-vue-pagination';
 
 export default {
   data() {
@@ -17,6 +18,9 @@ export default {
       DATEtime:''
     };
   },
+  components: {
+    Bootstrap4Pagination,
+  },
   mounted() {
     this.fetchExams();
     this.fetchCandidats();
@@ -25,16 +29,18 @@ export default {
 
   },
   methods: {
-    async fetchExams() {
-      try {
-        const response = await axios.get('/api/exams');
-        this.Exams = response.data.exams;
-        console.log(response.data.exams);
-        
-      } catch (error) {
-        console.error('Error fetching Candidats:', error);
-      }
-    },
+      async fetchExams(page = 1) {
+        try {
+          const response = await axios.get(`/api/exams?page=${page}`);
+          this.Exams = response.data.exams;
+          console.log("exams", response.data.exams.data);
+        } catch (error) {
+          console.error('Error fetching Exams:', error);
+        }
+      },
+      async getResults(page = 1) {
+        await this.fetchExams(page);
+      },
     async fetchCandidats() {
         try {
           const response = await axios.get('/api/candidats');
@@ -103,4 +109,5 @@ export default {
         
 
 } 
-};
+  }
+

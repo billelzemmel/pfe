@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Sanctum\HasApiTokens as SanctumHasApiTokens;
+use Laravel\Sanctum\HasApiTokens ;
 
 class Administrateur extends Model
 {
-    use HasFactory , SanctumHasApiTokens;
+    use HasFactory  ,HasApiTokens;
     protected $fillable = [
         'nom',
         'prenom',
@@ -16,7 +16,7 @@ class Administrateur extends Model
         'password', 
         'email',
         'autoecole_id',
-        'token'
+        'api_token'
     ];
     public function autoecole()
     {

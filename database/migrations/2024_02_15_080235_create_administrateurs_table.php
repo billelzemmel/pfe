@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('email');
             $table->unsignedBigInteger('autoecole_id')->nullable();
             $table->foreign('autoecole_id')->references('id')->on('autoecoles')->onDelete('set null');
-            $table->string('token')->nullable();
+            $table->string('api_token')->nullable();
 
             $table->timestamps();
         });

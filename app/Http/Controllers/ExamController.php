@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ExamRequest;
 use App\Models\Exam;
 use Illuminate\Http\Request;
 
@@ -9,7 +10,7 @@ class ExamController extends Controller
 {
     public function all_exams()
     {
-        $exams = Exam::with(['condidiat.user', 'moniteur.user', 'types'])->orderBy('id', 'DESC')->get();
+        $exams = Exam::with(['condidiat.user', 'moniteur.user', 'types'])->orderBy('date', 'DESC')->paginate(2);
     
         return response()->json([
             'exams' => $exams
@@ -29,15 +30,9 @@ class ExamController extends Controller
 }
 
 
-    public function create_exam(Request $request)
+    public function create_exam(ExamRequest $request)
     {
-        $request->validate([
-            'reference' => 'required',
-            'date' => 'required',
-            'condidat_id' => 'required',
-            'moniteur_id' => '',
-            'type_id' => 'required',
-        ]);
+        
 
         $exam = Exam::create($request->all());
 
@@ -108,4 +103,35 @@ class ExamController extends Controller
             'exams' => $exams
         ], 200);
     }
+    public function CountExamsCode($moniteurId)
+    {
+        $exams = Exam::where('moniteur_id', $moniteurId)
+            ->with(['condidiat.user', 'moniteur.user', 'types'])
+            ->whereHas('types', function ($query) {
+                $query->where('type', 'code');
+            })
+            ->orderBy('id', 'DESC')
+            ->get();
+        $nombre = $exams->count();
+        return response()->json([
+            'nombre code' => $nombre
+        ], 200);
+    }
+    
+    public function CountExamsConduit($moniteurId)
+    {
+        $exams = Exam::where('moniteur_id', $moniteurId)
+            ->with(['condidiat.user', 'moniteur.user', 'types'])
+            ->whereHas('types', function ($query) {
+                $query->where('type', 'conduit');
+            })
+            ->orderBy('id', 'DESC')
+            ->get();
+        $nombre = $exams->count();
+        return response()->json([
+            'nombre conduit' => $nombre
+        ], 200);
+    }
+    
 }
+    

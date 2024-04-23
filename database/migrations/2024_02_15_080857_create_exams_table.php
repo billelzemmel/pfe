@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
             $table->string('reference');
-            $table->date('date');
+            $table->dateTime('date');
             $table->unsignedBigInteger('condidat_id')->nullable();
             $table->foreign('condidat_id')->references('id')->on('Candidats')->onDelete('set null');
             $table->unsignedBigInteger('moniteur_id')->nullable();

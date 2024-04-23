@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Administrateur;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 class AdministrateurController extends Controller
 {
     public function all_administrateurs()
@@ -26,29 +27,48 @@ class AdministrateurController extends Controller
 
     public function create_administrateur(Request $request)
     {
-        $data = $request->validate([
-            'nom' => 'required',
-            'prenom' => 'required',
-            'login' => 'required',
-            'password' => 'required|min:8',
-            'email' => 'required|email',
-            'autoecole_id' =>'required'
-        ]);
-    
-        $existingUser = Administrateur::where('email', $data['email'])
-            ->orWhere('login', $data['login'])
-            ->first();
-    
-        if ($existingUser) {
-            return response()->json(['message' => 'User already exists'], 422);
-        }
-    
-        $data['token'] = $this->generateToken();
-        $data['password'] = bcrypt($data['password']);
-    
-        $sadmin = Administrateur::create($data);
-    
-        return response()->json(['message' => 'Signup successful', 'sadmin' => $sadmin], 201);
+        try {
+            //Validated
+            $validateUser = Validator::make($request->all(), 
+            [
+                'nom' => 'required',
+                'prenom' => 'required',
+                'login' => 'required|unique:users',
+                'password' => 'required',
+                'email' => 'required|email',
+                'autoecole_id'=>''
+                
+            ]);
+
+            if($validateUser->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validateUser->errors()
+                ], 401);
+            }
+
+            $user = Administrateur::create([
+                'nom' => $request->nom,
+                'email' => $request->email,
+                'prenom' => $request->prenom,
+                'login' => $request->login,
+                'password' => Hash::make($request->password),
+                'autoecole_id' => $request->autoecole_id,
+
+            ]);
+            $token = $user->createToken("API TOKEN")->plainTextToken;
+
+            $user->api_token = $token;
+            $user->save();
+
+        return response()->json(['message' => 'Signup successful', 'sadmin' => $user], 201);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status' => false,
+            'message' => $th->getMessage()
+        ], 500);
+    }
     }
 
     public function update_administrateur(Request $request, $id)
@@ -75,10 +95,7 @@ class AdministrateurController extends Controller
             'message' => 'Administrator updated successfully.',
         ], 200);
     }
-    private function generateToken()
-    {
-        return bin2hex(random_bytes(32));
-    }
+   
     public function delete_administrateur($id)
     {
         $admin = Administrateur::find($id);
@@ -93,20 +110,41 @@ class AdministrateurController extends Controller
     }
     public function login(Request $request)
     {
-        $data = $request->validate([
-            'email' => 'required',
-            'password' => 'required|min:8',
-        ]);
+        try {
+            $validateUser = Validator::make($request->all(), [
+                'email' => 'required|email',
+                'password' => 'required'
+            ]);
     
-        $sadmin = Administrateur::where('email', $data['email'])->first();
+            if ($validateUser->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validateUser->errors()
+                ], 401);
+            }
     
-        if (!$sadmin || !password_verify($data['password'], $sadmin->password)) {
-            return response()->json(['error' => 'Invalid login credentials'], 401);
-        }
+            $user = Administrateur::where('email', $request->email)->first();
     
-        $sadmin->update(['token' => $this->generateToken()]);
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Invalid email or password.'
+                ], 401);
+            }
     
-        return response()->json(['message' => 'Sadmin logged in successfully', 'admin'=> $sadmin ,'token' => $sadmin->token]);
+            $token = $user->createToken('API Token')->plainTextToken;
+    
+            $user->api_token = $token;
+            $user->save();
+    
+        return response()->json(['message' => 'Sadmin logged in successfully', 'admin'=> $user ,'token' => $user->api_token]);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status' => false,
+            'message' => $th->getMessage()
+        ], 500);
+    }
     }
     public function find_admin($id)
     {

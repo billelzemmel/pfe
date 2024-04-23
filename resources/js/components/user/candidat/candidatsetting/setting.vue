@@ -21,7 +21,7 @@
 
           <img :src="USERInfo.user.image_url"alt="Profile" class="rounded-circle">
           <h2> {{USERInfo.user.nom}} {{ USERInfo.user.prenom }}</h2>
-          <h3> Moniteur</h3>
+          <h3> Candidat</h3>
           <div class="social-links mt-2">
             <a href="#" class="twitter"><i class="bi bi-twitter"></i></a>
             <a href="#" class="facebook"><i class="bi bi-facebook"></i></a>

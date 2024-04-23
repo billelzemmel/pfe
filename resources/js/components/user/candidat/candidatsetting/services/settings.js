@@ -14,9 +14,9 @@ export default {
   methods: {
     async getUserInfo() {
       try {
-        this.userId = localStorage.getItem('userId');
-        const response = await axios.get(`/api/moniteurs/${this.userId}`); 
-        this.USERInfo = response.data.moniteur;
+        this.userId = localStorage.getItem('ConID');
+        const response = await axios.get(`/api/condidats/${this.userId}`); 
+        this.USERInfo = response.data.condidat;
         console.log(this.USERInfo);
 
       } catch (error) {

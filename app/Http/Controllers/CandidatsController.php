@@ -59,4 +59,18 @@ public function findCandidatByMoniteurId($moniteur_id)
             'candidats' => $candidats
         ], 200);
     }
+
+
+    public function CountMoniteurId($moniteur_id)
+    {
+        $candidats = Candidats::where('moniteur_id', $moniteur_id)
+                        ->with(['user', 'moniteur.user'])
+                        ->orderBy('id', 'DESC')
+                        ->get();
+                        $nombre = $candidats->count();
+
+        return response()->json([
+            'nombre Condidats' => $nombre
+        ], 200);
+    }
 }

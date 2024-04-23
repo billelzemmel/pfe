@@ -61,21 +61,20 @@ export default {
             }
           },
 
-
           async AddExam() {
             const formData = new FormData();
-            this.userId = localStorage.getItem('MonID');
-                console.log(userId)
+            const conId = localStorage.getItem('MonID'); 
+            console.log("mon id", conId);
             formData.append('reference', this.reference);
             formData.append('condidat_id', this.candidatId);
-            formData.append('moniteur_id', this.userId);
+            formData.append('moniteur_id', conId); 
             formData.append('type_id', this.typeId);
             
-            // Convert date and time to ISO 8601 format
             const dateTime = new Date(`${this.date}T${this.time}`);
             const formattedDateTime = dateTime.toISOString().slice(0, 19).replace('T', ' ');
             formData.append('date', formattedDateTime);
-            
+            console.log("date", formattedDateTime);
+        
             try {
                 const response = await axios.post('/api/exams', formData, {
                     headers: {
@@ -83,12 +82,12 @@ export default {
                     },
                 });
                 location.reload();
-
+        
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
                     text: response.data.message,
-                    
+                            
                 });
             } catch (error) {
                 Swal.fire({
@@ -96,8 +95,9 @@ export default {
                     title: 'Error',
                     text: error.response.data.message || 'An error occurred while adding the hh.',
                 });
-            }
+            } 
         }
+        
         
 
 } 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\Models\Candidats;
 use App\Models\User;
 use App\Models\Moniteur;
@@ -10,17 +11,185 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UserCreated;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
-     public function all_users()
+    public function all_users()
     {
         $users = User::orderBy('id', 'DESC')->get();
         return response()->json([
             'users' => $users
         ], 200);
-    } 
-   /*  public function all_users()
+    }
+
+    public function createUser(Request $request)
+    {
+        try {
+            //Validated
+            $validateUser = Validator::make($request->all(), 
+            [
+                'nom' => 'required',
+                'prenom' => 'required',
+                'login' => 'required|unique:users',
+                'password' => 'required',
+                'email' => 'required|email',
+                'type' => 'required|in:moniteur,condidat',
+                'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048'
+            ]);
+
+            if($validateUser->fails()){
+                return response()->json([
+                    'status' => false,
+                    'message' => 'validation error',
+                    'errors' => $validateUser->errors()
+                ], 401);
+            }
+            $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+
+            $user = User::create([
+                'nom' => $request->nom,
+                'email' => $request->email,
+                'prenom' => $request->prenom,
+                'type' => $request->type,
+                'login' => $request->login,
+                'image_url' => $uploadedFileUrl,
+                'password' => Hash::make($request->password)
+            ]);
+            $token = $user->createToken("API TOKEN")->plainTextToken;
+
+            $user->api_token = $token;
+            $user->save();
+
+            if ($request->input('type') === 'moniteur') {
+                Moniteur::create([
+                    'role' => 'moniteur',
+                    'user_id' => $user->id,
+                ]);
+            }
+            if ($request->input('type') === 'condidat') {
+                Candidats::create([
+                    'role' => 'condidat',
+                    'user_id' => $user->id,
+                ]);
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'User Created Successfully',
+                'user' => $user,
+
+                'token' => $user->api_token
+            ], 200);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status' => false,
+                'message' => $th->getMessage()
+            ], 500);
+        }
+    }
+
+
+
+   /*  public function create_user(UserRequest $request)
+    {
+       try {
+
+
+           $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
+           // $request['api_token'] = $user->createToken("API TOKEN")->plainTextToken
+           $user = User::create(array_merge(
+               $request->except('image'),
+               [
+                   'image_url' => $uploadedFileUrl,
+                   'api_token' => $user->createToken("API TOKEN")->plainTextToken
+               ]
+
+           ));
+
+
+           return response()->json([
+               'user' => $user,
+               'message' => 'User created successfully. Email sent.',
+           ], 201);
+       } catch (\Exception $e) {
+           Log::error('Error creating user and sending email: ' . $e->getMessage());
+
+           return response()->json([
+               'error' => 'An error occurred while creating the user and sending the email.',
+               'details' => $e->getMessage(),
+           ], 500);
+       }
+    } */
+
+
+    /**
+     * Login The User
+     * @param Request $request
+     * @return User
+     */
+    public function loginUser(Request $request)
+{
+    try {
+        $validateUser = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        if ($validateUser->fails()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'validation error',
+                'errors' => $validateUser->errors()
+            ], 401);
+        }
+
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid email or password.'
+            ], 401);
+        }
+
+        $token = $user->createToken('API Token')->plainTextToken;
+
+        $user->api_token = $token;
+        $user->save();
+
+        $relatedModel = Moniteur::class;
+        $ids = null;
+        $role = "";
+        if ($relatedModel::where('user_id', $user->id)->exists()) {
+            $ids = $relatedModel::where('user_id', $user->id)->first()->id;
+            $role = "moniteur";
+        } else {
+            $relatedModel = Candidats::class;
+            if ($relatedModel::where('user_id', $user->id)->exists()) {
+                $ids = $relatedModel::where('user_id', $user->id)->first()->id;
+                $role = "candidat";
+            }
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'User Logged In Successfully',
+            'token' => $token,
+            'user' => $user,
+            'role' => $role,
+            'typeid' => $ids
+        ], 200);
+    } catch (\Throwable $th) {
+        return response()->json([
+            'status' => false,
+            'message' => $th->getMessage()
+        ], 500);
+    }
+}
+
+    /*  public function all_users()
 {
     $users = User::orderBy('id', 'DESC')->get();
 
@@ -45,58 +214,7 @@ class UserController extends Controller
 } */
 
 
-    public function create_user(Request $request)
-    {
-        try {
-            $request->validate([
-                'nom' => 'required',
-                'prenom' => 'required',
-                'login' => 'required|unique:users',
-                'password' => 'required',
-                'email' => 'required|email',
-                'type' => 'required|in:moniteur,condidat',
-                'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048', 
-            ]);
     
-            $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
-            $request['token'] = $this->generateToken();
-
-            $user = User::create(array_merge(
-                $request->except('image'),
-                ['image_url' => $uploadedFileUrl]
-            ));
-    
-
-            if ($request->input('type') === 'moniteur') {
-                Moniteur::create([
-                    'role' => 'moniteur',
-                    'user_id' => $user->id,
-                ]);
-            }  
-            if ($request->input('type') === 'condidat'){
-                Candidats::create([
-                    'role' => 'condidat',
-                    'user_id' => $user->id,
-                ]);
-            } 
-    
-            return response()->json([
-                'user' => $uploadedFileUrl,
-                'message' => 'User created successfully. Email sent.',
-            ], 201);
-        } 
-        
-        catch (\Exception $e) {
-            Log::error('Error creating user and sending email: ' . $e->getMessage());
-        
-            return response()->json([
-                'error' => 'An error occurred while creating the user and sending the email.',
-                'details' => $e->getMessage(),
-            ], 500);
-        }
-        
-    }
-
     private function generateToken()
     {
         return bin2hex(random_bytes(32));
@@ -139,17 +257,17 @@ class UserController extends Controller
     public function delete_user($id)
     {
         $user = User::find($id);
-
+        
         if (!$user) {
             return response()->json(['message' => 'User not found.'], 404);
         }
 
-        
+
         $relatedModel = Moniteur::class;
         if ($relatedModel::where('user_id', $user->id)->exists()) {
             $relatedModel::where('user_id', $user->id)->delete();
         } else {
-           
+
             $relatedModel = Candidats::class;
             if ($relatedModel::where('user_id', $user->id)->exists()) {
                 $relatedModel::where('user_id', $user->id)->delete();
@@ -167,63 +285,63 @@ class UserController extends Controller
             'email' => 'required',
             'password' => 'required|min:8',
         ]);
-    
+
         $user = User::where('email', $data['email'])->first();
-    
         $relatedModel = Moniteur::class;
         $ids = null;
-        $role="";
+        $role = "";
         if ($relatedModel::where('user_id', $user->id)->exists()) {
             $ids = $relatedModel::where('user_id', $user->id)->first()->id;
-            $role="moniteur";
+            $role = "moniteur";
         } else {
             $relatedModel = Candidats::class;
             if ($relatedModel::where('user_id', $user->id)->exists()) {
                 $ids = $relatedModel::where('user_id', $user->id)->first()->id;
-                $role="candidat";
-
+                $role = "candidat";
             }
         }
-    
+
         if (!$user || !password_verify($data['password'], $user->password)) {
             return response()->json(['error' => 'Invalid login credentials'], 401);
         }
-    
-        $user->update(['token' => $this->generateToken()]);
-    
-        return response()->json(['message' => 'User logged in successfully', 'user' => $user, 'token' => $user->token, 'typeid' => $ids ,'role'=>$role]);
+
+        $user->update(['api_token' => $this->generateToken()]);
+
+        return response()->json([
+            'message' => 'User logged in successfully', 'user' => $user,
+            'token' => $user->api_token, 'typeid' => $ids, 'role' => $role
+        ]);
     }
     public function get_user($id)
-{
-    $user = User::find($id);
+    {
+        // dd('ok');
 
-    if (!$user) {
-        return response()->json(['error' => 'User not found.'], 404);
-    }
+        $user = User::find($id);
 
-    $relatedModel = Moniteur::class;
-    if ($relatedModel::where('user_id', $user->id)->exists()) {
-        $role = 'moniteur';
-    } else {
-        $relatedModel = Candidats::class;
-        if ($relatedModel::where('user_id', $user->id)->exists()) {
-            $role = 'candidat';
+        if (!$user) {
+            return response()->json(['error' => 'User not found.'], 404);
         }
+
+        $relatedModel = Moniteur::class;
+        if ($relatedModel::where('user_id', $user->id)->exists()) {
+            $role = 'moniteur';
+        } else {
+            $relatedModel = Candidats::class;
+            if ($relatedModel::where('user_id', $user->id)->exists()) {
+                $role = 'candidat';
+            }
+        }
+
+        return response()->json([
+            'user' => [
+                'id' => $user->id,
+                'nom' => $user->nom,
+                'prenom' => $user->prenom,
+                'login' => $user->login,
+                'email' => $user->email,
+                'type' => $role ?? null,
+                'image_url' => $user->image_url,
+            ]
+        ], 200);
     }
-
-    return response()->json([
-        'user' => [
-            'id' => $user->id,
-            'nom' => $user->nom,
-            'prenom' => $user->prenom,
-            'login' => $user->login,
-            'email' => $user->email,
-            'type' => $role ?? null,
-            'image_url' => $user->image_url,
-        ]
-    ], 200);
-}
-
-    
-
 }

@@ -26,19 +26,18 @@ class SadminController extends Controller
         if ($existingUser) {
             return response()->json(['message' => 'User already exists'], 422);
         }
-    
-        $data['token'] = $this->generateToken();
-        $data['password'] = bcrypt($data['password']);
+     
     
         $sadmin = Sadmin::create($data);
-    
+
+       $token = $sadmin->createToken("API TOKEN")->plainTextToken;
+
+        $sadmin->api_token = $token;
+        $sadmin->save();
         return response()->json(['message' => 'Signup successful', 'sadmin' => $sadmin], 201);
     }
     
-    private function generateToken()
-    {
-        return bin2hex(random_bytes(32));
-    }
+  
     public function login(Request $request)
 {
     $data = $request->validate([
@@ -52,9 +51,12 @@ class SadminController extends Controller
         return response()->json(['error' => 'Invalid login credentials'], 401);
     }
 
-    $sadmin->update(['token' => $this->generateToken()]);
 
-    return response()->json(['message' => 'Sadmin logged in successfully', 'sadmin'=> $sadmin ,'token' => $sadmin->token]);
+    $token = $sadmin->createToken('API Token')->plainTextToken;
+
+    $sadmin->api_token = $token;
+    $sadmin->save();    
+    return response()->json(['message' => 'Sadmin logged in successfully', 'sadmin'=> $sadmin ,'token' => $sadmin->api_token]);
 }
 
 }

@@ -2,7 +2,7 @@ version: '3'
 
 services:
   web:
-    image: frontendv2:latest 
+    image: frontendv3:latest 
     ports:
       - "8080:80"
     volumes:
@@ -24,7 +24,6 @@ services:
       - MYSQL_DATABASE=auto_ecole
     volumes:
       - db_data:/var/lib/mysql
-    container_name: auto_ecole
 
   # nginx:
   #   image: nginx:latest

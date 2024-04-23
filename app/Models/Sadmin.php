@@ -9,7 +9,7 @@ use Laravel\Sanctum\HasApiTokens as SanctumHasApiTokens;
 class Sadmin extends Authenticatable
 {
     use HasFactory, SanctumHasApiTokens;   
-     protected $fillable = ['nom', 'prenom', 'login', 'password', 'email', 'token'];
+     protected $fillable = ['nom', 'prenom', 'login', 'password', 'email', 'api_token'];
 
 
     

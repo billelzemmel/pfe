@@ -62,6 +62,17 @@ return [
             'hash' => true,
 
         ],
+        /* 'api' => [
+            'driver' => 'token',
+            'provider' => 'users',
+        ], */
+        'api' => [
+            'driver' => 'sanctum',
+            'provider' => 'users',
+        ],
+        
+    
+        
         
     ],
 
@@ -91,6 +102,7 @@ return [
             'driver' => 'eloquent',
             'model' => App\Models\Sadmin::class,
         ],
+        
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',

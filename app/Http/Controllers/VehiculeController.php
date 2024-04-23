@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VehiculeRequest;
 use App\Models\Vehicule;
 use Illuminate\Http\Request;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
@@ -30,16 +31,9 @@ class VehiculeController extends Controller
     ], 200);
 }
 
-    public function create_vehicule(Request $request)
+    public function create_vehicule(VehiculeRequest $request)
     {
-        $request->validate([
-            'matricule' => 'required|unique:vehicules',
-            'nom' => 'required',
-            'moniteur_id' => '',
-            'disponible' => 'boolean',
-            'type' => 'required|in:track,car,motor',
-            'image' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048'
-            ]);
+       
     
             $uploadedFileUrl = Cloudinary::upload($request->file('image')->getRealPath())->getSecurePath();
             

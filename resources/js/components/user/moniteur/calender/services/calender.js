@@ -27,8 +27,8 @@ export default {
         events: this.evenements, 
         eventTextColor: 'white',
         eventColor:'#717ff5',
-        selectable: true,
-        selectHelper: true,
+        selectable: false,
+        selectHelper: false,
         eventRender: function(event, element) {
           console.log(event);
           element.find('.fc-title').append('<br/><b>Condidiat nom:</b> ' + event.candidat_name + ' ' + event.candidat_prenom);

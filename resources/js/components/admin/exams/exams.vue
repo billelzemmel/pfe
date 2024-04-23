@@ -39,21 +39,30 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="exam in Exams" :key="exam.id">
+                  <tr v-for="exam in Exams.data" :key="exam.id">
                     <td>#{{ exam.reference }}</td>
-                    <td>{{ exam.condidiat.user.nom }}{{ exam.condidiat.user.prenom }}</td>
-                    <td>{{ exam.types.type }}</td>
-                    <td>{{ exam.date }}</td>
-                    <td>{{ exam.moniteur.user.nom }} {{ exam.moniteur.user.prenom }}</td>
-                    <td>
-                        <i class="bi bi-eye view" ></i>
-                        <i class="bi bi-pencil edit"></i>
-                        <i class="bi bi-trash3 clear"></i>
-                                </td>
-                </tr>
+    <td>
+        {{ exam.condidiat.user ? exam.condidiat.user.nom + ' ' + exam.condidiat.user.prenom : '' }}
+    </td>
+    <td>{{ exam.types.type }}</td>
+    <td>{{ exam.date }}</td>
+    <td>
+        {{ exam.moniteur.user ? exam.moniteur.user.nom + ' ' + exam.moniteur.user.prenom : '' }}
+    </td>
+    <td>
+        <i class="bi bi-eye view"></i>
+        <i class="bi bi-pencil edit"></i>
+        <i class="bi bi-trash3 clear"></i>
+    </td>
+</tr>
+
                   
                 </tbody>
               </table>
+              <Bootstrap4Pagination align="center" size="large"
+
+              :data="Exams" @pagination-change-page="getResults" ></Bootstrap4Pagination>
+
               <!-- End Table with stripped rows -->
 
             </div>
@@ -61,6 +70,7 @@
 
         </div>
       </div>
+      
     </section>
     </main>
 
@@ -119,3 +129,9 @@
 </template>
 <style scoped src="./css/examtab.css"></style>
 <script src="./services/exams.js"></script>
+
+<style scoped>
+    .TailwindPagination{
+        margin-bottom: 0;
+    }
+</style>
